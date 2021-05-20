@@ -1,0 +1,47 @@
+$ sudo npm install -g create-react-app 
+$ create-react-app react-complete-guide --scripts-version 1.1.5
+$ npm start
+$ npm run
+-------------
+app.js
+Person/Person.js
+Person/Person.css
+inline css in app.js
+---------
+class can't be used in JSX, should be className instead.
+
+JSX must has one root per componet.
+
+--------------
+// return React.createElement('div', null, 'h1', 'Hi, I\'m a React App!!!'));
+	// return React.createElement('div', null, React.createElement('h1', null, 'Does this work now?'));
+    // return React.createElement('div', {className: 'App'}, React.createElement('h1', null, 'Does this work now?'));
+--------------
+
+Manipulating the State: state-learning-card.pdf
+
+Using the useState() Hook for State Manipulate:
+	class-based.zip;	use-state-hook.zip	usestate-learning-card.pdf
+
+Stateless vs Stateful Components:
+	class-based.zip
+-------------------------------------
+click={this.switchNameHandler.bind(this, 'Max!')} is better.
+<button onClick={() => this.switchNameHandler('Maximilian!!')}> is less better
+
+css file is global.
+
+
+base-syntax--03-finished: style
+
+css file; 	inline style
+
+-------------
+
+Useful Resources & Links
+
+    create-react-app: https://github.com/facebookincubator/create-react-app
+    Introducing JSX: https://reactjs.org/docs/introducing-jsx.html
+    Rendering Elements: https://reactjs.org/docs/rendering-elements.html
+    Components & Props: https://reactjs.org/docs/components-and-props.html
+    Listenable Events: https://reactjs.org/docs/events.html
