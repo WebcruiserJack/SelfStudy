@@ -1,0 +1,177 @@
+098 Optimizing Functional Components with React.memo()
+
+利用props.arraylength
+
+都优化并不好，每个都检测，按需
+
+pureComponent 
+
+Rendering Adjacent JSX Elements: use array or hoc, aux (React.Fragment - <Fragment>)
+------
+const aux= props => props.children;
+
+--------Higher Order Components---------------
+const withClass=props=>(
+	<div className={props.classes}>{props.childres}</div>
+);
+
+exporet default withClass;
+
+-------------------
+<WithClass className={classes.App}>
+...
+</WithClass>
+------------------normal function---
+const withClass=(WrappedComponents, className)=>{
+	return props => (
+		<div className={className}>
+			<WrappedComponent />
+		</div>
+	);
+};
+
+exporet default withClass;
+----------
+export defaul withclass(App, classes.App)
+
+
+---------Unknown Props--------------
+const withClass=(WrappedComponents, className)=>{
+	return props => (
+		<div className={className}>
+			<WrappedComponent {...props}/>  //props={props}
+		</div>
+	);
+};
+
+exporet default withClass;
+---------------
+this.setState({
+	persons: persons;
+	changeCounter: this.state.changeCounter +1
+});
+
+You can set state synchronously here but it's not guaranteed to execute and finish immediately and therefore, this state when used for a state update is not guaranteed to be the latest state or the previous on which you depend, it could be an older state.
+
+this.setState((prevState,props) => {	// current props
+    return{
+	persons: persons;
+	changeCounter: prevState.changeCounter +1 /***/
+    };
+});
+
+------------Using PropTypes------------
+npm install --save prop-types
+
+import PropTypes from 'prop-types';
+
+Person.propTypes={
+	click: PropTypes.func,
+	name: PropTypes.string,
+	age: PropTypes.number,
+	changed: PropTypes.func
+}; // 当开发库组件需要规范别人传过来的数据类型的时候
+
+-------------Refs------------
+person.js
+
+...
+componentDidMount(){
+    this.inputElement.focus();
+}
+...
+<input
+    key="i3"
+    ref={(inputEl) => {this.inputElement=inputEl}}
+    type="text"
+...
+------------Another, same as previous----------------
+constructor(props){
+    super(props);
+    this.inputElementRf=React.createRef();
+}
+...
+componentDidMount(){
+    this.inputElementRef.current.focus();
+}
+...
+<input
+    key="i3"
+    ref={this.inputElementRef}
+    type="text"
+...
+----------------Ref with React Hooks: The button is clicked whenever this page is loaded-----------   
+const toggleBtnRef=useRef(null);
+//toggleBtnRef.current.click(); //it dosen't work, for JSX code haven't run yet
+useEffect()(()=> {	// run after every render cycle
+    toggleBtnRef.current.click();
+    ...
+};
+},[]);  // useEffect usually run after JSX
+
+...
+<button ref={toggleBtnRef} ...>...</button>
+-------------------Context API----------------
+114 cmp-deep-dive-12-finished 113.Use the Context API
+auth-context.js
+const authContext=React.createContext({
+  authenticated: false,	// default value
+  login: () => {}
+});
+
+app.js:
+<AuthContext.Provider value={{authenticated: this.state.authenticated, login: this.loginHandler}}>
+...
+</AuthContext.Provider> 
+
+Person.js 
+<AuthContext.Consumer>
+{ (context) => 
+    context.authenticated? <p>Authenticated! </p> : <p> Please log in </p> 
+}
+...
+// use when there is a long chain data to pass
+</AuthContext.Consumer>
+
+Cocktail.js
+<div>
+...
+<AuthContext.Consumer>
+{ context => <button onClick={context.login}>Log in </button> }
+// use when there is a long chain data to pass
+</AuthContext.Consumer>
+</div>
+-------------
+114 contextType & useContext()
+
+Person.js: 
+static contextType=AuthContext;		// in class
+
+componentDidMount(){
+  this.inputElementRef.current.focus();
+  console.log(this.context.authenticated);
+}
+
+render(){
+... 
+return(
+<AUX>
+{ this.context.authenticated? <p>Authenticated! </p> : <p> Please log in </p> 
+}
+...
+// use when there is a long chain data to pass
+</AUX>
+);
+
+Now this allows React to automatically connect this component here, this class-based component to your context behind the scenes and it gives you a new property in this component, the this.context property.
+
+---------------
+Cocktail.js (in functional component)
+
+const authContext=useContext(AuthContext);
+
+...
+<button onClick={authContext.login}>Login</button>
+...
+
+ 
