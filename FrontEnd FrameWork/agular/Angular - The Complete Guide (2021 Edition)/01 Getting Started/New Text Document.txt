@@ -1,0 +1,23 @@
+npm install -g @angular/cli
+ng new my-dream-app
+cd my-dream-app
+ng serve
+
+
+[(ngModule)] in <input type="text" [(ngmodule)]="name"> need include  FormsMoudle
+--------------add bootstrap-------
+npm install --save bootstrap@5
+
+angular.json
+"my-first-app":{
+    ...
+    "architect":{
+	...
+	"styles":[
+	    "node_modules/bootstrap/dist/css/bootstrap.min.css",
+	    "src/styles.css"	// global styele
+	],
+	...
+    ...
+}
+

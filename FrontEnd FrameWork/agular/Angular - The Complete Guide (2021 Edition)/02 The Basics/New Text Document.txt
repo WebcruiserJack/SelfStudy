@@ -1,0 +1,21 @@
+app.components.ts
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  // styleUrls: ['./app.component.css']
+  styles:[`
+    h3{
+      color:dodgerblue;
+    }
+  `]
+})
+----------------
+@Component({
+    // selector: 'app-server',	//<app-server></app-server>
+    //selector: '[app-server]',	//<div app-server></dvi>
+    // selector: '.app-server', //<div class="app-server"></dvi>
+    templateUrl: './server.component.html'
+})
+-------------
+ngStyle allow to dynamic assign a style, ngStyle allowed to change the CSS style itself, ngClass allow to dynamically add or remove CSS classes.
