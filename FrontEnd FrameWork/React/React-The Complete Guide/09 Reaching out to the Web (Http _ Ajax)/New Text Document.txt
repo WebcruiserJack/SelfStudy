@@ -1,0 +1,10 @@
+npm install axios --save
+
+<Link> subsitute <a> can get local refresh
+
+withRoute can transfer Route information in props to sub component
+
+this.props.match.url
+
+<NavLink> is similar to <Link>, and can also add some style.
+
