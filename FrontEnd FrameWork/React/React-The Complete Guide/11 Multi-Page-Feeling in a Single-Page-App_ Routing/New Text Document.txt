@@ -1,0 +1,177 @@
+npm install --save react-router react-router-dom
+
+lazy loading with React Suspense 16.6 ( doesn't support server end render)
+
+<Link> subsitute <a> can get local refresh
+
+withRoute can transfer Route information in props to sub component:
+withRouter(post)
+
+this.props.match.url+'/new-post' // relative path
+pathname:'/new-post'		// absolute path 
+
+<NavLink> is similar to <Link>, and can also add some style.
+
+Navlink add "active" css class to the link
+
+navlink usually need exact to correctly rend link css style
+--------------15------
+Blog.js
+<Route path="/" exact component={Posts}/>
+<Route path="/new-post" component={NewPost}/>
+<Route path="/:id" exact component={FullPosts}/>
+
+Posts.js
+return( //因为link现在是数组最外层的标签，所以key要从post移到link里面
+	<Link to={'/'+post.id} key={post.id}>  
+		<Post
+			
+			title={post.title}
+			author={post.author}
+			clicked={()=>this.postSelectHandler()	
+	</Link>);
+
+componentDidMount: 现在不需要componentDidUpdate了，因为现在组件只是挂载或移去，而不是更新了
+this.props.match.params.id
+
+-----------205 Using Switch to Load a Single Route--------------
+<Switch> is the same as exact or 使用独特的路由路径
+
+------------206 Navigating Programmatically-------------
+Posts.js
+postSelectedHandler=(id)=>{
+	this.props.history.push({pathname:'/'+id});
+	//this.props.history.push('/'+id);
+}
+
+---------------207 Active links-------------
+<Route path={this.props.match.url+'/:id'} exact component={FullPost} />
+
+-------------208 Nested Routes-------------
+nested route，外面path="/" 不能是exact
+
+Creating Dynamic Nested Routes:
+componentDidMount();
+componentDidUpdate();
+loadData();
+
+-------------209 Redirecting-------------
+<Switch>
+           <Route path="/new-post" component={NewPost} />
+           <Route path="/posts" component={Posts} />
+           <Redirect from="/" to="/posts" />
+           {/* <Route path="/" component={Posts} /> */}
+</Switch>
+
+-----------210 Conditional Redirect--------
+NewPost.js
+if (this.state.submitted) {
+            redirect = <Redirect to="/posts" />;
+}
+
+-----------212 Using the History Prop to Redirect-------------
+this.props.history.replace('/posts'); //push, redirect is push
+
+-------------213 Working with Guards--------------------
+<Switch>
+                    {this.state.auth ? <Route path="/new-post" component={AsyncNewPost} /> : null}
+                    <Route path="/posts" component={Posts} />
+                    <Route render={() => <h1>Not found</h1>}/>
+                    {/* <Redirect from="/" to="/posts" /> */}
+                    {/* <Route path="/" component={Posts} /> */}
+                </Switch>
+
+ componentDidMount () {
+        // If unauth => this.props.history.replace('/posts');
+        console.log( this.props );
+    }
+--------------214 404---------------------
+<Switch>
+                    {this.state.auth ? <Route path="/new-post" component={AsyncNewPost} /> : null}
+                    <Route path="/posts" component={Posts} />
+                    <Route render={() => <h1>Not found</h1>}/> // 没有这个处理就会自动转到path='/', 所以不能和redirect from "/" 一起使用，总是放在最后一个
+                    {/* <Redirect from="/" to="/posts" /> */}
+                    {/* <Route path="/" component={Posts} /> */}
+</Switch>
+
+---------215 code spliting or lazy loading----------------
+hoc>asyncComponent.js
+
+const asyncComponent = (importComponent) => {
+    return class extends Component {
+        state = {
+            component: null
+        }
+
+        componentDidMount () {
+            importComponent()
+                .then(cmp => {
+                    this.setState({component: cmp.default});
+                });
+        }
+        
+        render () {
+            const C = this.state.component;
+
+            return C ? <C {...this.props} /> : null;
+        }
+    }
+}
+
+Blog.js:
+const AsyncNewPost = asyncComponent(() => {
+    return import('./NewPost/NewPost');
+});
+
+{this.state.auth ? <Route path="/new-post" component={AsyncNewPost} /> : null}
+
+see network in chrome debug
+
+--------------------216 lasy loading with React Suspense-------------
+After React 16
+
+import {Component, Suspense} from 'react';
+const Posts=React.lazy(()=>import('./containers/Posts'));
+
+<BrowserRouter>
+  <React.Fragment>
+    <nav>
+	<Navlink to="/user">User Page</NavLink>
+	<Navlink to="/posts">User Page</NavLink>
+    </nav>
+    <Route path="/" component={Welcome} exact />
+    <Route path="/user" component={User} />
+    //<Route path="/posts" component={Posts} />
+    <Route path="/posts" 
+	render={()=>(
+	   <Suspense fallback={<div>Loading...</div>}>
+		<Posts />
+	   </Suspense>)}
+    />
+  </React.Fragment>
+</BrowserRouter>
+
+-------
+class App extends Component{
+  state={showPosts:false};
+  
+  modeHandler=()=>{
+    this.setState(prevState=>{
+	return {showPosts:!preState.showPosts};
+    });
+  };
+
+  render(){
+	return (
+	  <React.Fragment>	  </React.Fragment>
+	  <button onClick={this.modeHandler}>Toggle Mode</button>
+	  {this.state.showPosts ? (<Suspense fallback={<div>Loading...</div>}>
+		<Posts />
+	   </Suspense>) : <User />}
+	  </React.Fragment>
+---------------217 Routing and Server Deployment--------------
+ <BrowserRouter basname="/my-app"> //default is '/'
+	<div className="App">
+		<Blog />
+	</div>
+</BrowserRouter>
