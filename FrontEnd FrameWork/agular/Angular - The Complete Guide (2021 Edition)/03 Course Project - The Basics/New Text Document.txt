@@ -1,0 +1,11 @@
+ng g c recipes --skipTests true
+
+ng g c recipes/recipes-list --skipTests true
+
+ng g c recipes/recipes-detail --skipTests true
+
+ng g c recipes/recipes-list/recipes-item --skipTests true
+
+ng g c shopping-list --skipTests true
+
+ng g c shopping-list/shopping-edit --skipTests true
